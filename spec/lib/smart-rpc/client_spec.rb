@@ -38,8 +38,8 @@ describe SmartRpc::Client do
   subject{ SmartRpc::Client.new(options) }
 
   describe "#initialize" do
-    it "should set app_name" do
-      subject.instance_variable_get("@app_name").should == "foo"
+    it "should set app" do
+      subject.instance_variable_get("@app").should == "foo"
     end
 
     it "should set version" do

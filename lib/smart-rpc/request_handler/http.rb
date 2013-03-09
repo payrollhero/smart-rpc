@@ -18,9 +18,9 @@ module SmartRpc
         attr_reader :authentication_scheme
       end
 
-      def perform(request_details)
-        uri = URI.parse(request_details.address)
-        raw_response = self.__send__(request_details.request_method, uri.to_s, :default_params => api_credentials_for(request_details.app_name, request_details.authentication_scheme), :body => request_details.message)
+      def perform(request)
+        uri = URI.parse([request.location, request.resource_details.location].compact.join("/"))
+        raw_response = self.__send__(request.resource_details.action, uri.to_s, :default_params => api_credentials_for(request.app, request.authentication_scheme), :body => request.resource_details.message)
         response = SmartRpc::Response.new(raw_response)
         raise SmartRpc::RequestError.new(response) if response.server_error?
         response
@@ -65,12 +65,12 @@ module SmartRpc
 
       private
 
-      def api_credentials_for(app_name, scheme)
-        self.class.authentication_scheme.fetch_details(scheme, app_name)
+      def api_credentials_for(app, scheme)
+        self.class.authentication_scheme.fetch_details(scheme, app)
       end
 
       def map_method(registered_method, options = {})
-        http_method = options[:to] ? options[:to] : registered_method
+        http_method = options[:to] || registered_method
 
         self.singleton_class.send(:define_method, registered_method) do |*args, &block|
           self.class.__send__(http_method, *args, &block)

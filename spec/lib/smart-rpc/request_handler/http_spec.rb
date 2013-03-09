@@ -13,13 +13,16 @@ describe SmartRpc::RequestHandler::Http do
     })
   end
 
-  let(:request_details) do
+  let(:request) do
     OpenStruct.new(
+      :app => 'foo',
       :authentication_scheme => 'api_key',
-      :request_method => :post,
-      :address => "http://example.com/open_structs.json",
-      :message => {:user => {:name => "Test"}},
-      :app_name => 'foo'
+      :location => "http://example.com",
+      :resource_details => OpenStruct.new(
+        :action => :post,
+        :location => "open_structs.json",
+        :message => {:user => {:name => "Test"}}
+      )
     )
   end
 
@@ -36,7 +39,7 @@ describe SmartRpc::RequestHandler::Http do
       end
 
       it "should return back the response" do
-        result = subject.perform(request_details)
+        result = subject.perform(request)
         result.parsed_response.should eq({"name" => "Test", "id" => 1})
       end
     end
@@ -49,7 +52,7 @@ describe SmartRpc::RequestHandler::Http do
       end
 
       it "should raise an error" do
-        expect{ subject.perform(request_details) }.to raise_exception(SmartRpc::RequestError)
+        expect{ subject.perform(request) }.to raise_exception(SmartRpc::RequestError)
       end
     end
   end
