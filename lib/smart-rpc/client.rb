@@ -2,21 +2,12 @@
   require file_path
 end
 
-#class Dummy
-  #def foo
-    #user = User.new
-    #client = SmartRpc::Client.new(:app => 'Foo', :version => 'v1').set_scheme('http')
-    #client.register_actions_for('http', {:notify => :post})
-    #client.request(:create, :via => :http, :for => user)
-  #end
-#end
-
 class SmartRpc::Client
   def initialize(options)
     @app_name           = options.fetch(:app)
     @version            = options.fetch(:version)
     @config             = SmartRpc::Setting.request(@app_name, @version)
-    @request_strategies = SmartRpc::RequestStrategy.new
+    @request_strategies = SmartRpc::RequestStrategyRegistrar.new
   end
 
   def set_scheme(strategy)

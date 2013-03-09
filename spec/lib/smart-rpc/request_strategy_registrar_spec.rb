@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe SmartRpc::RequestStrategy do
+describe SmartRpc::RequestStrategyRegistrar do
   module SmartRpc::RequestHandler
     class Test < Base; end
   end
 
-  subject{ SmartRpc::RequestStrategy.new }
+  subject{ SmartRpc::RequestStrategyRegistrar.new }
 
   let(:registered_strategies){ subject.instance_variable_get('@registered_strategies') }
 

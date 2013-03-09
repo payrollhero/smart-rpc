@@ -1,5 +1,5 @@
 module SmartRpc
-  class RequestStrategy
+  class RequestStrategyRegistrar
     def initialize
       register(:base)
     end
