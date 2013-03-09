@@ -33,7 +33,7 @@ describe SmartRpc::Client do
 
   let(:dumb_ass){ DumpAss.new }
   let(:options){ {:app => 'foo', :version => 'v1'} }
-  let(:request_strategies){ subject.instance_variable_get("@request_strategies") }
+  let(:request_strategy_registrar){ subject.instance_variable_get("@request_strategy_registrar") }
 
   subject{ SmartRpc::Client.new(options) }
 
@@ -54,8 +54,7 @@ describe SmartRpc::Client do
 
     it "should set request strategies" do
       subject.set_scheme("http")
-
-      request_strategies.get("http").should be_a SmartRpc::RequestHandler::Http
+      request_strategy_registrar.get("http").should be_a SmartRpc::RequestHandler::Http
     end
   end
 
@@ -69,7 +68,6 @@ describe SmartRpc::Client do
 
     it "should do a request" do
       subject.request(:read, :for => dumb_ass, :via => :http)
-
       a_request(:get, "http://example.com/rest/v1/dump_asses/1.json?api_key=ABCDE").with(:body => "something=to_read&and=something_else").should have_been_made.once
     end
   end
@@ -77,11 +75,10 @@ describe SmartRpc::Client do
   describe "#register_action_for" do
     before{ subject.set_scheme("http") }
 
-    let(:request_handler){ subject.instance_variable_get("@request_strategies").get("http") }
+    let(:request_handler){ subject.instance_variable_get("@request_strategy_registrar").get("http") }
 
     it "should register the new action method" do
       subject.register_actions_for("http", :list => :get)
-
       request_handler.should respond_to :list
     end
   end

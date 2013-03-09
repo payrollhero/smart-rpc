@@ -4,31 +4,31 @@ end
 
 class SmartRpc::Client
   def initialize(options)
-    @app_name           = options.fetch(:app)
-    @version            = options.fetch(:version)
-    @config             = SmartRpc::Setting.request(@app_name, @version)
-    @request_strategies = SmartRpc::RequestStrategyRegistrar.new
+    @app_name = options.fetch(:app)
+    @version = options.fetch(:version)
+    @config = SmartRpc::Setting.request(@app_name, @version)
+    @request_strategy_registrar = SmartRpc::RequestStrategyRegistrar.new
   end
 
   def set_scheme(strategy)
-    @request_strategies.register(strategy)
+    @request_strategy_registrar.register(strategy)
     self
   end
 
   def request(action, options)
     resource = SmartRpc::Resource.new(options.fetch(:for))
     request_details = OpenStruct.new(
-      :request_method        => action,
-      :message               => resource.data_for(action),
-      :address               => address_for(resource, action),
+      :request_method => action,
+      :message => resource.data_for(action),
+      :address => address_for(resource, action),
       :authentication_scheme => @config.authentication_scheme,
-      :app_name              => @app_name
+      :app_name => @app_name
     )
-    @request_strategies.get(options.fetch(:via)).perform(request_details)
+    @request_strategy_registrar.get(options.fetch(:via)).perform(request_details)
   end
 
   def register_actions_for(scheme, actions)
-    @request_strategies.get(scheme).register_actions_for(actions)
+    @request_strategy_registrar.get(scheme).register_actions_for(actions)
   end
 
   private
