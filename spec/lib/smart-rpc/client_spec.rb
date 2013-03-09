@@ -67,7 +67,7 @@ describe SmartRpc::Client do
     end
 
     it "should do a request" do
-      subject.request(:read, :for => dumb_ass, :via => :http)
+      subject.request(:action => :read, :for => dumb_ass, :via => :http)
       a_request(:get, "http://example.com/rest/v1/dump_asses/1.json?api_key=ABCDE").with(:body => "something=to_read&and=something_else").should have_been_made.once
     end
   end

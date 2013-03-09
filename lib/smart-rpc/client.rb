@@ -16,12 +16,12 @@ class SmartRpc::Client
 
   def register_actions_for(scheme, actions)
     @request_strategy_registrar.get(scheme).register_actions_for(actions)
+    self
   end
 
-  def request(action, options)
+  def request(options)
     request = SmartRpc::Request.new(@app, @version)
-    resource = SmartRpc::Resource.new(options.fetch(:for))
-    request.set_resource_details(:action => action, :message => resource.data_for(action), :location => resource.path_for(action))
+    request.set_resource_details(options.fetch(:for), options.fetch(:action))
     @request_strategy_registrar.get(options.fetch(:via)).perform(request)
   end
 end

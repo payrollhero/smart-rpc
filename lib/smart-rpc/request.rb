@@ -9,8 +9,9 @@ module SmartRpc
       @authentication_scheme = settings.authentication_scheme
     end
 
-    def set_resource_details(options)
-      @resource_details = OpenStruct.new(options)
+    def set_resource_details(resource, action)
+      resource = SmartRpc::Resource.new(resource)
+      @resource_details = OpenStruct.new(:action => action, :message => resource.data_for(action), :location => resource.path_for(action))
     end
   end
 end

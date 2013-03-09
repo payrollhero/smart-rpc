@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Suman Mukherjee"]
-  s.date = %q{2013-03-09}
+  s.date = %q{2013-03-12}
   s.description = %q{Gem to send requests to remote applications or push the request to an async message handling or job processing unit.}
   s.email = %q{sumanmukherjee03@gmail.com}
   s.extra_rdoc_files = [
@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
     "lib/smart-rpc/client.rb",
     "lib/smart-rpc/errors.rb",
     "lib/smart-rpc/object_ext.rb",
+    "lib/smart-rpc/request.rb",
     "lib/smart-rpc/request_handler.rb",
     "lib/smart-rpc/request_handler/base.rb",
     "lib/smart-rpc/request_handler/http.rb",
@@ -29,7 +30,7 @@ Gem::Specification.new do |s|
     "lib/smart-rpc/request_handler/http/authentication/base.rb",
     "lib/smart-rpc/request_handler/http/authentication/name_and_password.rb",
     "lib/smart-rpc/request_handler/http/authentication_scheme.rb",
-    "lib/smart-rpc/request_strategy.rb",
+    "lib/smart-rpc/request_strategy_registrar.rb",
     "lib/smart-rpc/resource.rb",
     "lib/smart-rpc/resource_handler.rb",
     "lib/smart-rpc/resource_handler/base_handler.rb",
