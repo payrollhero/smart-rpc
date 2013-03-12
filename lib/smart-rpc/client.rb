@@ -20,7 +20,7 @@ class SmartRpc::Client
   end
 
   def request(options)
-    request = SmartRpc::Request.new(@app, @version)
+    request = SmartRpc::Request.new(@app, @version, options.fetch(:authenticate_via))
     request.set_resource_details(options.fetch(:for), options.fetch(:action))
     @request_strategy_registrar.get(options.fetch(:via)).perform(request)
   end

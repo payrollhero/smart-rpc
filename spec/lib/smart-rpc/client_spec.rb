@@ -18,7 +18,7 @@ describe SmartRpc::Client do
     })
   end
 
-  class DumpAss
+  class ClientTestResource
     def id
       1
     end
@@ -31,7 +31,7 @@ describe SmartRpc::Client do
     end
   end
 
-  let(:dumb_ass){ DumpAss.new }
+  let(:resource){ ClientTestResource.new }
   let(:options){ {:app => 'foo', :version => 'v1'} }
   let(:request_strategy_registrar){ subject.instance_variable_get("@request_strategy_registrar") }
 
@@ -62,13 +62,13 @@ describe SmartRpc::Client do
     before do
       subject.set_scheme("http")
       subject.register_actions_for('http', :crud)
-      stub_request(:get, "http://example.com/rest/v1/dump_asses/1.json?api_key=ABCDE").
+      stub_request(:get, "http://example.com/rest/v1/client_test_resources/1.json?api_key=ABCDE").
        to_return(:status => 200, :body => "", :headers => {})
     end
 
     it "should do a request" do
-      subject.request(:action => :read, :for => dumb_ass, :via => :http)
-      a_request(:get, "http://example.com/rest/v1/dump_asses/1.json?api_key=ABCDE").with(:body => "something=to_read&and=something_else").should have_been_made.once
+      subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => 'api_key')
+      a_request(:get, "http://example.com/rest/v1/client_test_resources/1.json?api_key=ABCDE").with(:body => "something=to_read&and=something_else").should have_been_made.once
     end
   end
 
