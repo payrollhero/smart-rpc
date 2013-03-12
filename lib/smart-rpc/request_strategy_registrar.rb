@@ -13,7 +13,7 @@ module SmartRpc
       begin
         @registered_strategies.fetch(strategy.to_sym)
       rescue IndexError
-        raise SmartRpc::StrategyNotFoundError.new(strategy.to_s)
+        raise SmartRpc::StrategyNotFoundError.new(strategy)
       end
     end
   end

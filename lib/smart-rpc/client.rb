@@ -7,20 +7,27 @@ class SmartRpc::Client
     @app = options.fetch(:app)
     @version = options.fetch(:version)
     @request_strategy_registrar = SmartRpc::RequestStrategyRegistrar.new
+    @authentication_scheme_registrar = SmartRpc::AuthenticationSchemeRegistrar.new
   end
 
-  def set_scheme(strategy)
+  def register_strategy(strategy)
     @request_strategy_registrar.register(strategy)
     self
   end
 
-  def register_actions_for(scheme, actions)
-    @request_strategy_registrar.get(scheme).register_actions_for(actions)
+  def register_authentication_scheme(strategy, scheme)
+    @authentication_scheme_registrar.register(scheme, strategy)
+    self
+  end
+
+  def register_actions_for(strategy, actions)
+    @request_strategy_registrar.get(strategy).register_actions_for(actions)
     self
   end
 
   def request(options)
-    request = SmartRpc::Request.new(@app, @version, options.fetch(:authenticate_via))
+    authentication_scheme = @authentication_scheme_registrar.get(options.fetch(:authenticate_via), options.fetch(:via))
+    request = SmartRpc::Request.new(@app, @version, authentication_scheme)
     request.set_resource_details(options.fetch(:for), options.fetch(:action))
     @request_strategy_registrar.get(options.fetch(:via)).perform(request)
   end

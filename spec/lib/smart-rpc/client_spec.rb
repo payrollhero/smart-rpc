@@ -47,20 +47,21 @@ describe SmartRpc::Client do
     end
   end
 
-  describe "#set_scheme" do
+  describe "#register_strategy" do
     it "should return self" do
-      subject.set_scheme("http").should be_a SmartRpc::Client
+      subject.register_strategy("http").should be_a SmartRpc::Client
     end
 
     it "should set request strategies" do
-      subject.set_scheme("http")
+      subject.register_strategy("http")
       request_strategy_registrar.get("http").should be_a SmartRpc::RequestHandler::Http
     end
   end
 
   describe "#request" do
     before do
-      subject.set_scheme("http")
+      subject.register_strategy("http")
+      subject.register_authentication_scheme("http", "api_key")
       subject.register_actions_for('http', :crud)
       stub_request(:get, "http://example.com/rest/v1/client_test_resources/1.json?api_key=ABCDE").
        to_return(:status => 200, :body => "", :headers => {})
@@ -73,7 +74,7 @@ describe SmartRpc::Client do
   end
 
   describe "#register_action_for" do
-    before{ subject.set_scheme("http") }
+    before{ subject.register_strategy("http") }
 
     let(:request_handler){ subject.instance_variable_get("@request_strategy_registrar").get("http") }
 

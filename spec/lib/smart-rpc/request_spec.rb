@@ -25,7 +25,8 @@ describe SmartRpc::Request do
   end
 
   subject do
-    SmartRpc::Request.new('foo', 'v1', 'api_key')
+    authentication_scheme = SmartRpc::RequestHandler::Http::Authentication::ApiKey.new
+    SmartRpc::Request.new('foo', 'v1', authentication_scheme)
   end
 
   describe "#initialize" do
@@ -38,7 +39,7 @@ describe SmartRpc::Request do
     end
 
     it "should set the authentication scheme" do
-      subject.authentication_scheme.should eq('api_key')
+      subject.authentication_data.should eq({:api_key => 'ABCDE'})
     end
   end
 
@@ -51,7 +52,7 @@ describe SmartRpc::Request do
       result.location.should eq("open_structs.json")
     end
 
-    it "should return the request" do
+    it "should return the request object" do
       subject.set_resource_details(resource, :create).should eq(subject)
     end
   end

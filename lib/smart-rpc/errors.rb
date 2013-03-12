@@ -8,9 +8,15 @@ module SmartRpc
     end
   end
 
-  class StrategyNotFoundError < IndexError
-    def initialize(key)
-      super(key + " is not registered as a strategy")
+  class StrategyNotFoundError < SmartRpcError
+    def initialize(strategy)
+      super(strategy.to_s + " is not registered as a strategy")
+    end
+  end
+
+  class AuthenticationSchemeNotFoundError < SmartRpcError
+    def initialize(scheme, strategy)
+      super(scheme.to_s + " is not registered as an authentication scheme for " + strategy.to_s)
     end
   end
 end

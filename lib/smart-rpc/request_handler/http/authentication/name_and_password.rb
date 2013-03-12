@@ -8,6 +8,7 @@ module SmartRpc
           def generate_credentials_for(app_name)
             @credentials[:app_name] = app_name
             @credentials[:app_secret] = SmartRpc::Setting.authentication(app_name, "name_and_password").password
+            self
           end
         end
       end

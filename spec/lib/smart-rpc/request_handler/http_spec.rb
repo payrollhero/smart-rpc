@@ -1,22 +1,10 @@
 require 'spec_helper'
 
 describe SmartRpc::RequestHandler::Http do
-  before :each do
-    SmartRpc::Setting.stub!(:config).and_return({
-      'foo' => {
-        'authentication' => {
-          'api_key' => {
-            'api_key' => 'ABCDEF'
-          }
-        }
-      }
-    })
-  end
-
   let(:request) do
     OpenStruct.new(
       :app => 'foo',
-      :authentication_scheme => 'api_key',
+      :authentication_data => {'api_key' => 'ABCDEF'},
       :location => "http://example.com",
       :resource_details => OpenStruct.new(
         :action => :post,
