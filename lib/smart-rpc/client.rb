@@ -26,11 +26,7 @@ class SmartRpc::Client
   end
 
   def request(options)
-    authentication_scheme = begin
-                              @authentication_scheme_registrar.get(options.fetch(:authenticate_via), options.fetch(:via))
-                            rescue SmartRpc::AuthenticationSchemeNotFoundError
-                              OpenStruct.new(:generate_credentials_for => nil, :credentials => {})
-                            end
+    authentication_scheme = options[:authenticate_via] ? @authentication_scheme_registrar.get(options[:authenticate_via], options.fetch(:via)) : OpenStruct.new(:generate_credentials_for => nil, :credentials => {})
     request = SmartRpc::Request.new(@app, @version, authentication_scheme)
     request.set_resource_details(options.fetch(:for), options.fetch(:action))
     @request_strategy_registrar.get(options.fetch(:via)).perform(request)

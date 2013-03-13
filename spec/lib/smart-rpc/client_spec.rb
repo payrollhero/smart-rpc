@@ -93,12 +93,12 @@ describe SmartRpc::Client do
       end
     end
 
-    context "when an authentication scheme is not provided" do
+    context "when a registered authentication scheme is not provided" do
       it "should perform a request and return the response" do
         stub_request(:get, "http://example.com/rest/v1/client_test_resources/3.json") \
           .with(:body => "account_id=1") \
           .to_return(:status => 200, :body => {:name => "Test"}.to_json, :headers => {})
-        response = subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => :oauth)
+        response = subject.request(:action => :read, :for => resource, :via => :http)
         JSON.parse(response.body).should eq({'name' => 'Test'})
       end
     end
