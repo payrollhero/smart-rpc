@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
     "lib/smart-rpc/authentication_scheme_registrar.rb",
     "lib/smart-rpc/client.rb",
     "lib/smart-rpc/errors.rb",
-    "lib/smart-rpc/object_ext.rb",
     "lib/smart-rpc/request.rb",
     "lib/smart-rpc/request_handler.rb",
     "lib/smart-rpc/request_handler/base.rb",

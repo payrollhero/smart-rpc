@@ -68,7 +68,7 @@ describe SmartRpc::Client do
 
     it "should register the new action method" do
       subject.register_actions("http", :list => :get)
-      subject.instance_variable_get("@request_strategy_registrar").get("http").should respond_to :list
+      subject.instance_variable_get("@request_strategy_registrar").get("http").should be_a SmartRpc::RequestHandler::Http
     end
 
     it "should return the client" do
@@ -83,12 +83,24 @@ describe SmartRpc::Client do
       subject.register_actions('http', :crud)
     end
 
-    it "should perform a request and return the response" do
-      stub_request(:get, "http://example.com/rest/v1/client_test_resources/3.json?api_key=ABCDE") \
-        .with(:body => "account_id=1") \
-        .to_return(:status => 200, :body => {:name => "Test"}.to_json, :headers => {})
-      response = subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => :api_key)
-      JSON.parse(response.body).should eq({'name' => 'Test'})
+    context "when an authentication scheme is passed" do
+      it "should perform a request and return the response" do
+        stub_request(:get, "http://example.com/rest/v1/client_test_resources/3.json?api_key=ABCDE") \
+          .with(:body => "account_id=1") \
+          .to_return(:status => 200, :body => {:name => "Test"}.to_json, :headers => {})
+        response = subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => :api_key)
+        JSON.parse(response.body).should eq({'name' => 'Test'})
+      end
+    end
+
+    context "when an authentication scheme is not provided" do
+      it "should perform a request and return the response" do
+        stub_request(:get, "http://example.com/rest/v1/client_test_resources/3.json") \
+          .with(:body => "account_id=1") \
+          .to_return(:status => 200, :body => {:name => "Test"}.to_json, :headers => {})
+        response = subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => :oauth)
+        JSON.parse(response.body).should eq({'name' => 'Test'})
+      end
     end
   end
 end

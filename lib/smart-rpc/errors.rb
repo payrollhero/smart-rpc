@@ -19,4 +19,10 @@ module SmartRpc
       super(scheme.to_s + " is not registered as an authentication scheme for " + strategy.to_s)
     end
   end
+
+  class ActionNotFoundError < SmartRpcError
+    def initialize(action, strategy)
+      super(action.to_s + " is not registered as an action for " + strategy.to_s)
+    end
+  end
 end

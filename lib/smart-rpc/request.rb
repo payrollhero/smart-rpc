@@ -18,7 +18,8 @@ module SmartRpc
     private
 
     def get_authentication_data_from(authentication_scheme)
-      authentication_scheme.generate_credentials_for(@app).credentials
+      authentication_scheme.generate_credentials_for(@app)
+      authentication_scheme.credentials
     end
   end
 end

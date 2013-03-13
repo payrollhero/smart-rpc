@@ -7,7 +7,7 @@ describe SmartRpc::RequestHandler::Http do
       :authentication_data => {'api_key' => 'ABCDEF'},
       :location => "http://example.com",
       :resource_details => OpenStruct.new(
-        :action => :post,
+        :action => :create,
         :location => "open_structs.json",
         :message => {:user => {:name => "Test"}}
       )
@@ -17,80 +17,66 @@ describe SmartRpc::RequestHandler::Http do
   subject{ SmartRpc::RequestHandler::Http.new }
 
   describe "#perform" do
-    before { subject.register_actions_for(:http) }
+    before { subject.register_actions(:crud) }
 
-    context "when the response from the remote application is OK" do
-      before :each do
-        stub_request(:post, "http://example.com/open_structs.json?api_key=ABCDEF").
-          with(:body => "user[name]=Test").
-          to_return(:status => 200, :body => "{\"id\":1,\"name\":\"Test\"}", :headers => {})
+    context "when the action requested is registered with the handler" do
+      context "when the response from the remote application is OK" do
+        before :each do
+          stub_request(:post, "http://example.com/open_structs.json?api_key=ABCDEF").
+            with(:body => "user[name]=Test").
+            to_return(:status => 200, :body => "{\"id\":1,\"name\":\"Test\"}", :headers => {})
+        end
+
+        it "should return back the response" do
+          result = subject.perform(request)
+          JSON.parse(result.body).should eq({"name" => "Test", "id" => 1})
+        end
       end
 
-      it "should return back the response" do
-        result = subject.perform(request)
-        JSON.parse(result.body).should eq({"name" => "Test", "id" => 1})
+      context "when the response from the remote application is a server error" do
+        before :each do
+          stub_request(:post, "http://example.com/open_structs.json?api_key=ABCDEF").
+            with(:body => "user[name]=Test").
+            to_return(:status => [500, "Internal Server Error"])
+        end
+
+        it "should raise an error" do
+          expect{ subject.perform(request) }.to raise_exception(SmartRpc::RequestError)
+        end
       end
     end
 
-    context "when the response from the remote application is a server error" do
-      before :each do
-        stub_request(:post, "http://example.com/open_structs.json?api_key=ABCDEF").
-          with(:body => "user[name]=Test").
-          to_return(:status => [500, "Internal Server Error"])
-      end
-
-      it "should raise an error" do
-        expect{ subject.perform(request) }.to raise_exception(SmartRpc::RequestError)
+    context "when the action is not registered with the handler" do
+      it "should raise an exception" do
+        request.resource_details.stub!(:action).and_return(:notify)
+        expect {subject.perform(request)}.to raise_exception(SmartRpc::ActionNotFoundError)
       end
     end
   end
 
-  describe "#register_actions_for" do
+  describe "#register_actions" do
     before do
       stub_request(:post, "http://some-server.com/resource.json").
         to_return(:status => 200, :body => "", :headers => {})
     end
 
-    let(:other_instance){ SmartRpc::RequestHandler::Http.new }
-
-    it "should add action only to the registering instance" do
-      subject.register_actions_for(:create => :post)
-
-      subject.should respond_to :create
-      other_instance.should_not respond_to :create
-    end
-
-    context "given a hash map" do
-      it "should map action to equivalent http method" do
-        subject.class.should_receive(:post)
-        subject.register_actions_for(:create => :post)
-
-        subject.create("http://some-server.com/resource.json")
+    context "when a hash of actions mapping to verbs are passed" do
+      it "should register the given actions with the http verb" do
+        subject.register_actions(:create => :post)
+        subject.instance_variable_get('@actions').should eq({:create => :post})
       end
     end
 
-    context "given an array map" do
-      it "should map action to method with the same name" do
-        subject.class.should_receive(:post)
-        subject.register_actions_for([:post])
-
-        subject.post("http://some-server.com/resource.json")
+    context "when the mapping passed is :crud" do
+      it "should map the crud actions to the http verbs" do
+        subject.register_actions(:crud)
+        subject.instance_variable_get('@actions').should eq({
+          :create => :post,
+          :read   => :get,
+          :update => :put,
+          :delete => :delete
+        })
       end
     end
-
-    context "given a symbol map" do
-      it "should map action for the named group" do
-        subject.class.should_receive(:post)
-        subject.register_actions_for(:crud)
-
-        subject.create("http://some-server.com/resource.json")
-        subject.should respond_to :create
-        subject.should respond_to :read
-        subject.should respond_to :update
-        subject.should respond_to :delete
-      end
-    end
-
   end
-
 end
