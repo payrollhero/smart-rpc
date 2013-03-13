@@ -20,7 +20,7 @@ class SmartRpc::Client
     self
   end
 
-  def register_actions_for(strategy, actions)
+  def register_actions(strategy, actions)
     @request_strategy_registrar.get(strategy).register_actions_for(actions)
     self
   end

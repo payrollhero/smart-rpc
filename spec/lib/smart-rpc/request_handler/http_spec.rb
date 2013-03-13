@@ -28,7 +28,7 @@ describe SmartRpc::RequestHandler::Http do
 
       it "should return back the response" do
         result = subject.perform(request)
-        result.parsed_response.should eq({"name" => "Test", "id" => 1})
+        JSON.parse(result.body).should eq({"name" => "Test", "id" => 1})
       end
     end
 

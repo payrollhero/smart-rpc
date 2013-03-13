@@ -5,6 +5,7 @@ module SmartRpc
     class Http < Base
       require "smart-rpc/request_handler/http/authentication/api_key"
       require "smart-rpc/request_handler/http/authentication/name_and_password"
+      require "smart-rpc/request_handler/http/wrapped_response.rb"
 
       include HTTMultiParty
       format :json
@@ -12,9 +13,9 @@ module SmartRpc
       def perform(request)
         uri = URI.parse([request.location, request.resource_details.location].compact.join("/"))
         raw_response = self.__send__(request.resource_details.action, uri.to_s, :default_params => request.authentication_data, :body => request.resource_details.message)
-        response = SmartRpc::Response.new(raw_response)
-        raise SmartRpc::RequestError.new(response) if response.server_error?
-        response
+        wrapped_response = SmartRpc::RequestHandler::Http::WrappedResponse.new(raw_response)
+        raise SmartRpc::RequestError.new(wrapped_response) if wrapped_response.server_error?
+        wrapped_response.response
       end
 
       def register_http_actions

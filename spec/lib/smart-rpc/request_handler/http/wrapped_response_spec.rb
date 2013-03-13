@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe SmartRpc::Response do
+describe SmartRpc::RequestHandler::Http::WrappedResponse do
   before :each do
     @code = 200
   end
 
   subject do
-    SmartRpc::Response.new(OpenStruct.new(:code => @code, :headers => ["Foo", "Bar"], :body => "{\"test_key\":\"test val\"}"))
+    SmartRpc::RequestHandler::Http::WrappedResponse.new(OpenStruct.new(:code => @code, :headers => ["Foo", "Bar"], :body => "{\"test_key\":\"test val\"}"))
   end
 
   describe "#code" do

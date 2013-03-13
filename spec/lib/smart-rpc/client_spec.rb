@@ -19,21 +19,13 @@ describe SmartRpc::Client do
   end
 
   class ClientTestResource
-    def id
-      1
-    end
+    def id; 3; end
 
-    def data_for_read
-      {
-        :something => :to_read,
-        :and       => :something_else
-      }
-    end
+    def data_for_read; {:account_id => 1}; end
   end
 
   let(:resource){ ClientTestResource.new }
   let(:options){ {:app => 'foo', :version => 'v1'} }
-  let(:request_strategy_registrar){ subject.instance_variable_get("@request_strategy_registrar") }
 
   subject{ SmartRpc::Client.new(options) }
 
@@ -54,7 +46,33 @@ describe SmartRpc::Client do
 
     it "should set request strategies" do
       subject.register_strategy("http")
-      request_strategy_registrar.get("http").should be_a SmartRpc::RequestHandler::Http
+      subject.instance_variable_get("@request_strategy_registrar").get("http").should be_a SmartRpc::RequestHandler::Http
+    end
+  end
+
+  describe "#register_authentication_scheme" do
+    before { subject.register_strategy("http") }
+
+    it "should register the authentication scheme for the specific request strategy" do
+      subject.register_authentication_scheme("http", "api_key")
+      subject.instance_variable_get('@authentication_scheme_registrar').get('api_key', 'http').should be_a SmartRpc::RequestHandler::Http::Authentication::ApiKey
+    end
+
+    it "should return the client" do
+      subject.register_authentication_scheme("http", "api_key").should eq(subject)
+    end
+  end
+
+  describe "#register_actions" do
+    before{ subject.register_strategy("http") }
+
+    it "should register the new action method" do
+      subject.register_actions("http", :list => :get)
+      subject.instance_variable_get("@request_strategy_registrar").get("http").should respond_to :list
+    end
+
+    it "should return the client" do
+      subject.register_actions("http", :list => :get).should eq(subject)
     end
   end
 
@@ -62,25 +80,15 @@ describe SmartRpc::Client do
     before do
       subject.register_strategy("http")
       subject.register_authentication_scheme("http", "api_key")
-      subject.register_actions_for('http', :crud)
-      stub_request(:get, "http://example.com/rest/v1/client_test_resources/1.json?api_key=ABCDE").
-       to_return(:status => 200, :body => "", :headers => {})
+      subject.register_actions('http', :crud)
     end
 
-    it "should do a request" do
-      subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => 'api_key')
-      a_request(:get, "http://example.com/rest/v1/client_test_resources/1.json?api_key=ABCDE").with(:body => "something=to_read&and=something_else").should have_been_made.once
-    end
-  end
-
-  describe "#register_action_for" do
-    before{ subject.register_strategy("http") }
-
-    let(:request_handler){ subject.instance_variable_get("@request_strategy_registrar").get("http") }
-
-    it "should register the new action method" do
-      subject.register_actions_for("http", :list => :get)
-      request_handler.should respond_to :list
+    it "should perform a request and return the response" do
+      stub_request(:get, "http://example.com/rest/v1/client_test_resources/3.json?api_key=ABCDE") \
+        .with(:body => "account_id=1") \
+        .to_return(:status => 200, :body => {:name => "Test"}.to_json, :headers => {})
+      response = subject.request(:action => :read, :for => resource, :via => :http, :authenticate_via => :api_key)
+      JSON.parse(response.body).should eq({'name' => 'Test'})
     end
   end
 end
