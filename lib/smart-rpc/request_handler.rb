@@ -1,3 +1,4 @@
+# namespace for the request handler for different strategies
 module SmartRpc
   module RequestHandler
   end

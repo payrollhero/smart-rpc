@@ -1,3 +1,4 @@
+# This class is a wrapper around the basic http response.
 module SmartRpc
   module RequestHandler
     class Http

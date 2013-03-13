@@ -1,3 +1,5 @@
+# This class acts as a registrar for various authentication schemes.
+# You can not use a authentication scheme if you have not registered it.
 module SmartRpc
   class AuthenticationSchemeRegistrar
     def initialize

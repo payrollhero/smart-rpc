@@ -1,3 +1,5 @@
+# This class generates the request object that is sent to the handler of the strategy.
+# This object contains authentication data and resource specific data besides basic information.
 module SmartRpc
   class Request
     attr_accessor :app, :location, :authentication_data, :resource_details

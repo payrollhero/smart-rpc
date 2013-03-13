@@ -1,3 +1,6 @@
+# The base class for all authentication schemes for http strategy.
+# This is an abstract class.
+# The child classes must implement generate_credentials_for method.
 module SmartRpc
   module RequestHandler
     class Http

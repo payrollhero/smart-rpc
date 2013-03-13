@@ -1,3 +1,6 @@
+# This class deals with handling the http strategy.
+# It implements 2 basic methods that the base class does not implement - perform and register_actions.
+# For now we only support json format for making http requests.
 require "httmultiparty"
 
 module SmartRpc

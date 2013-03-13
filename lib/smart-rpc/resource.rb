@@ -1,3 +1,5 @@
+# This class represents the abstraction of the resource object on the client side that is making the request.
+# You can decorate the object with custom modules containing path information and parameter information for various actions that are going to be performed on it.
 require "retryable"
 
 class SmartRpc::Resource

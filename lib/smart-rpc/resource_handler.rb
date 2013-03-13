@@ -1,3 +1,4 @@
+# Namespace for the modules that extend the behavior of the resource.
 module SmartRpc
   module ResourceHandler
   end

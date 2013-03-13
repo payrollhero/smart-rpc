@@ -1,3 +1,4 @@
+# This class deals with the api key authentication scheme.
 module SmartRpc
   module RequestHandler
     class Http

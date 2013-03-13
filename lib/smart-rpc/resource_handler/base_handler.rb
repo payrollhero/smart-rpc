@@ -1,5 +1,7 @@
+# This module contains methods that returns the paths and parameters for various actions.
+# This module is very specific to the http strategy.
+# Probably should move to a different namespace.
 module SmartRpc::ResourceHandler::BaseHandler
-
   def mapped_resource_on_remote
     self.class.name.underscore.to_sym
   end
@@ -22,5 +24,4 @@ module SmartRpc::ResourceHandler::BaseHandler
   def path_for_resource_domain
     self.mapped_resource_on_remote.to_s.pluralize
   end
-
 end

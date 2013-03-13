@@ -1,3 +1,5 @@
+# This class basically is a registrar for various strategies present.
+# You are not allowed to use a request strategy that you have not registered.
 module SmartRpc
   class RequestStrategyRegistrar
     def initialize

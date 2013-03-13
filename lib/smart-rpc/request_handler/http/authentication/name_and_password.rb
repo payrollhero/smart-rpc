@@ -1,3 +1,4 @@
+# This class represents the authentication scheme - name and password.
 module SmartRpc
   module RequestHandler
     class Http

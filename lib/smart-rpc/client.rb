@@ -2,6 +2,15 @@
   require file_path
 end
 
+# This class is the main user facing class.
+# One can initiate a new client for every class and register the strategy that one wants to use for performing requests.
+# The gem provides only the http strategy for performing the requests.
+# But you can define your own strategies.
+# You need to register the authentication schemes for your strategy if you want to have one. You can also opt out of it.
+# You also need to register the actions that you want to perform for the startegy.
+# For example : For the http strategy you can pass :crud or pass a hash like :create => :post to register the actions.
+# Finally once the client is set up, you can perform multiple requests with that client.
+# On each request you can choose which strategy to apply, which authentication scheme to use and what action to perform.
 class SmartRpc::Client
   def initialize(options)
     @app = options.fetch(:app)

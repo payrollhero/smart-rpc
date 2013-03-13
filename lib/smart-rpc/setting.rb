@@ -1,3 +1,4 @@
+# This module contains all configuration information.
 module SmartRpc
   module Setting
     class << self
