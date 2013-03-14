@@ -28,7 +28,7 @@ module SmartRpc
         raw_response = self.class.__send__(http_verb, uri.to_s, :default_params => request.authentication_data, :body => request.resource_details.message)
         wrapped_response = SmartRpc::RequestHandler::Http::WrappedResponse.new(raw_response)
         raise SmartRpc::RequestError.new(wrapped_response) if wrapped_response.server_error?
-        wrapped_response.response
+        wrapped_response
       end
 
       def register_actions(action_map)
