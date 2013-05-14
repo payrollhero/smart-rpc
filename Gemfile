@@ -1,4 +1,4 @@
-source :rubygems
+source "https://rubygems.org"
 
 gem "httmultiparty"
 gem "i18n"
@@ -7,13 +7,13 @@ gem "retryable" # https://github.com/nfedyashev/retryable
 
 group :development do
   gem "jeweler"
+  gem "travis-lint"
 end
 
 group :development, :test do
   gem "rspec"
   gem "bundler"
   gem "debugger"
-  gem "travis-lint"
 end
 
 group :test do
