@@ -13,6 +13,7 @@ group :development, :test do
   gem "rspec"
   gem "bundler"
   gem "debugger"
+  gem "travis-lint"
 end
 
 group :test do
