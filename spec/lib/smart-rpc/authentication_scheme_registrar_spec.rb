@@ -31,8 +31,9 @@ describe SmartRpc::AuthenticationSchemeRegistrar do
       end
 
       context "when the scheme has not been registered" do
-        it "should raise an exception" do
-          expect {subject.get('token_exchange', 'http')}.to raise_exception(SmartRpc::AuthenticationSchemeNotFoundError)
+        it "should return back a base scheme that serves as the null object for authentication schemes not found" do
+          result = subject.get('token_exchange', 'http')
+          result.should respond_to(:generate_credentials_for)
         end
       end
 

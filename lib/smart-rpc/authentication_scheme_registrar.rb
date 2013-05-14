@@ -14,17 +14,23 @@ module SmartRpc
     end
 
     def register(scheme, strategy)
-      @schemes[strategy.to_sym][scheme.to_sym] = "SmartRpc::RequestHandler::#{strategy.to_s.camelize}::Authentication::#{scheme.to_s.camelize}".constantize.new
+      @schemes[strategy.to_sym][scheme.to_sym] = scheme(scheme, strategy)
       self
     end
 
     def get(scheme, strategy)
       raise SmartRpc::StrategyNotFoundError.new(strategy) unless @schemes.has_key?(strategy.to_sym)
       begin
-        @schemes.fetch(strategy.to_sym).fetch(scheme.to_sym)
+        @schemes.fetch(strategy.to_sym).fetch(scheme.to_s.to_sym)
       rescue IndexError
-        raise SmartRpc::AuthenticationSchemeNotFoundError.new(scheme, strategy)
+        scheme(:base, strategy)
       end
+    end
+
+    private
+
+    def scheme(scheme, strategy)
+      "SmartRpc::RequestHandler::#{strategy.to_s.camelize}::Authentication::#{scheme.to_s.camelize}".constantize.new
     end
   end
 end

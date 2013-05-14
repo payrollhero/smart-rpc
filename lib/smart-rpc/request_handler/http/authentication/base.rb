@@ -1,6 +1,6 @@
 # The base class for all authentication schemes for http strategy.
-# This is an abstract class.
-# The child classes must implement generate_credentials_for method.
+# This is kind of an abstract class, rather provides the functionality of a null object.
+# The child classes must implement generate_credentials_for method for a more concrete implementation.
 module SmartRpc
   module RequestHandler
     class Http
@@ -13,7 +13,7 @@ module SmartRpc
           end
 
           def generate_credentials_for(app_name)
-            raise NotImplementedError
+            self
           end
         end
       end
