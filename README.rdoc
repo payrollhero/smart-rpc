@@ -6,6 +6,10 @@ The resource you are trying to work with on the remote application can be specif
 One can also add not Restful actions to the list of actions available if needed.
 Smart Rpc provides you the flexibility to swap out your request strategy with some message handling system or job processing system.
 
+== build status
+
+{<img src="https://travis-ci.org/payrollhero/smart-rpc.png" />}[https://travis-ci.org/payrollhero/smart-rpc]
+
 == Contributing to smart-rpc
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
