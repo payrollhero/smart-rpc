@@ -1,9 +1,9 @@
+require "active_support/inflector"
+require "active_support/ordered_hash"
+require "active_support/json"
+require "smart-rpc/object_ext"
+
 module SmartRpc
-  class << self
-    def config(app_name, version)
-      OpenStruct.new(self.settings.fetch(app_name).fetch(version))
-    end
-  end
 end
 
-require "smart-rpc/request"
+require "smart-rpc/client"

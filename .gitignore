@@ -16,7 +16,7 @@ lib/bundler/man
 spec/reports
 tmp
 _yardoc
-doc/
+doc
 Gemfile.lock
 log
 

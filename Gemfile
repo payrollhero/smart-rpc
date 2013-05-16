@@ -1,12 +1,20 @@
 source :rubygems
 
 gem "httmultiparty"
+gem "i18n"
+gem "activesupport"
+gem "retryable" # https://github.com/nfedyashev/retryable
 
 group :development do
-  gem "jeweler", "~> 1.8.4"
+  gem "jeweler"
 end
 
 group :development, :test do
   gem "rspec"
   gem "bundler"
+  gem "debugger"
+end
+
+group :test do
+  gem "webmock", :require => false
 end

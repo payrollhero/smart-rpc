@@ -1,9 +1,13 @@
 = smart-rpc
 
-Description goes here.
+Smart Rpc provides similar functionalities to Active Resource.
+It allows you to call Restful actions on a remote application without you having to create a matching resource on your local application.
+The resource you are trying to work with on the remote application can be specified while making the request.
+One can also add not Restful actions to the list of actions available if needed.
+Smart Rpc provides you the flexibility to swap out your request strategy with some message handling system or job processing system.
 
 == Contributing to smart-rpc
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.

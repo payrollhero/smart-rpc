@@ -3,5 +3,4 @@ module SmartRpc
   end
 end
 
-require "smart-rpc/resource_handler/base_handler"
-require "smart-rpc/resource_handler/time_app_clockings_handler"
+Dir[File.dirname(__FILE__) + "/resource_handler/**/*.rb"].each {|f| require f}

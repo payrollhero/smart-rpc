@@ -21,8 +21,10 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Gem to send requests to remote applications or push the request to an async message handling or job processing unit.}
   gem.email = "sumanmukherjee03@gmail.com"
   gem.authors = ["Suman Mukherjee"]
+  gem.files = FileList['lib/**/*.rb']
   # dependencies defined in Gemfile
   gem.add_dependency "httmultiparty"
+  gem.add_dependency "retryable"
 end
 
 require 'rspec/core'

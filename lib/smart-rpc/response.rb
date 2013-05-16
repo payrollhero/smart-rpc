@@ -12,30 +12,30 @@ class SmartRpc::Response
   end
 
   def continue?
-    code.in?(100..199)
+    (100...200) === code
   end
 
   def ok?
-    code.in?(200..299)
+    (200...300) === code
   end
 
   def redirect?
-    code.in?(300..399)
+    (300...400) === code
   end
 
   def client_error?
-    code.in?(400..499)
+    (400...500) === code
   end
 
   def server_error?
-    code.in?(500..599)
+    (500...600) === code
   end
 
   def method_missing(name, *args, &block)
     @response.respond_to?(name) ? @response.__send__(name, *args, &block) : super
   end
 
-  def respond_to_missing?(name, include_private = false)
+  def respond_to?(name)
     @response.respond_to?(name) || super
   end
 end
